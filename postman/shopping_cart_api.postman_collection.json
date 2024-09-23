@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "bb046f83-c4d0-4bd6-b398-2589478deb39",
+		"name": "shopping_cart_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33301386"
+	},
+	"item": [
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"buyer_id\": 1,\n    \"product_id\": 101,\n    \"number_of_installments\": 3,\n    \"total_amount\": 1500,\n    \"purchase_date\": \"2024-09-23T12:00:00.123456789Z\"\n  },\n  {\n    \"buyer_id\": 2,\n    \"product_id\": 102,\n    \"number_of_installments\": 5,\n    \"total_amount\": 2500,\n    \"purchase_date\": \"2024-09-23T13:00:00.987654321Z\"\n  },\n  {\n    \"buyer_id\": 3,\n    \"product_id\": 103,\n    \"number_of_installments\": 1,\n    \"total_amount\": 500,\n    \"purchase_date\": \"2024-09-23T14:00:00.111111111Z\"\n  }\n]\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_gateway_url}}/dev/v1/shopping_cart/",
+					"host": [
+						"{{api_gateway_url}}"
+					],
+					"path": [
+						"dev",
+						"v1",
+						"shopping_cart",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "inherit"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

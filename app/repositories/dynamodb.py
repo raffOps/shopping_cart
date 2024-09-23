@@ -2,6 +2,7 @@ from abc import ABC
 from typing import Any
 
 from boto3.resources.factory import ServiceResource
+from botocore.exceptions import ClientError
 
 from domain.errors import InternalServerError
 from domain.models.shopping_cart import Shopping_Cart
@@ -15,65 +16,16 @@ class DynamoDBRepository(Shopping_Cart_Writer_Reader_Repository_Port, Shopping_C
     def __init__(self, conn: ServiceResource):
         super().__init__()
         self.conn: Any = conn
+
+    def read_cart_from_buyer_id(self, buyer_id: int) -> Shopping_Cart:
+        pass
+
+    def write_cart(self, carts: list[Shopping_Cart]) -> None:
+        table = self.conn.Table("ShoppingCart")
         try:
-            create_cart_table(self.conn)
-        except Exception as e:
-            raise InternalServerError("Not possible to create cart table") from e
-
-    def read_cart(self, cart: Shopping_Cart) -> Shopping_Cart:
-        pass
-
-    def write_cart(self, cart: Shopping_Cart) -> Shopping_Cart:
-        pass
-
-
-def create_cart_table(conn: Any) -> None:
-    table = conn.create_table(
-        TableName='ShoppingCart',
-        KeySchema=[
-            {
-                'AttributeName': 'buyer_id',
-                'KeyType': 'HASH'
-            },
-            {
-                'AttributeName': 'product_id',
-                'KeyType': 'RANGE'
-            }
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'buyer_id',
-                'AttributeType': 'N'
-            },
-            {
-                'AttributeName': 'product_id',
-                'AttributeType': 'N'
-            },
-            {
-                'AttributeName': 'purchase_date',
-                'AttributeType': 'S'
-            }
-        ],
-        BillingMode='PAY_PER_REQUEST',
-        GlobalSecondaryIndexes=[
-            {
-                'IndexName': 'PurchaseDateIndex',
-                'KeySchema': [
-                    {
-                        'AttributeName': 'purchase_date',
-                        'KeyType': 'HASH'
-                    },
-                    {
-                        'AttributeName': 'buyer_id',
-                        'KeyType': 'RANGE'
-                    }
-                ],
-                'Projection': {
-                    'ProjectionType': 'INCLUDE',
-                    'NonKeyAttributes': ['product_id', 'number_of_installments', 'total_amount']
-                },
-            }
-        ]
-    )
-
-    table.meta.client.get_waiter('table_exists').wait(TableName='ShoppingCart')
+            with table.batch_writer() as writer:
+                for cart in carts:
+                    json_cart = cart.model_dump(mode="json")
+                    writer.put_item(Item=json_cart)
+        except ClientError as e:
+            raise InternalServerError(f"Not possible put item {json_cart} to table. Error: {e}") from e

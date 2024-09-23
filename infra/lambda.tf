@@ -1,41 +1,25 @@
-module "lambda_function" {
-  source = "terraform-aws-modules/lambda/aws"
+resource "aws_lambda_function" "shopping_cart_api" {
+  # If the file is not in the current working directory you will need to include a
+  # path.module in the filename.
+  filename      = "../lambda.zip"
+  function_name = "shopping_cart_api"
+  role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "adapters/rest/v1/handler.handler"
 
-  function_name = "lambda-with-layer"
-  description   = "My awesome lambda function"
-  handler       = "index.lambda_handler"
-  runtime       = "python3.12"
-  publish       = true
+  runtime = "python3.12"
 
-  source_path = "../src/lambda-function1"
-
-  store_on_s3 = true
-  s3_bucket   = "my-bucket-id-with-lambda-builds"
-
-  layers = [
-    module.lambda_layer_s3.lambda_layer_arn,
-  ]
-
-  environment_variables = {
-    Serverless = "Terraform"
-  }
-
-  tags = {
-    Module = "lambda-with-layer"
+  environment {
+    variables = {
+      env = "dev"
+    }
   }
 }
 
-module "lambda_layer_s3" {
-  source = "terraform-aws-modules/lambda/aws"
-
-  create_layer = true
-
-  layer_name          = "lambda-layer-s3"
-  description         = "My amazing lambda layer (deployed from S3)"
-  compatible_runtimes = ["python3.12"]
-
-  source_path = "../src/lambda-layer"
-
-  store_on_s3 = true
-  s3_bucket   = "my-bucket-id-with-lambda-builds"
+# Adicionando permissão para o API Gateway invocar a função Lambda
+# Adicionando permissão para o API Gateway invocar a função Lambda
+resource "aws_lambda_permission" "allow_api_gateway" {
+  statement_id  = "AllowExecutionFromApiGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.shopping_cart_api.function_name  # Substitua pelo seu nome de função
+  principal     = "apigateway.amazonaws.com"
 }

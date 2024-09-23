@@ -3,8 +3,6 @@ resource "aws_iam_policy" "lambda_dynamodb" {
   path        = "/"
   description = "service for lambda function work with dynamodb table"
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   policy = jsonencode({
     "Version": "2012-10-17",
     "Statement": [
@@ -17,7 +15,8 @@ resource "aws_iam_policy" "lambda_dynamodb" {
           "dynamodb:GetItem",
           "dynamodb:Scan",
           "dynamodb:Query",
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:BatchWriteItem"
         ],
         "Resource": [
           "*"
@@ -43,25 +42,30 @@ resource "aws_iam_policy" "lambda_dynamodb" {
   }
 }
 
-resource "aws_iam_role" "test_role" {
-  name = "teacharove_lambda_role"
-  description =  "Allows Lambda functions to call AWS services on your behalf."
-  depends_on = [aws_iam_policy.lambda_dynamodb]
+resource "aws_iam_role" "iam_for_lambda" {
+  name        = "iam_for_lambda"
+  description = "Allows Lambda functions to call AWS services on your behalf."
+  depends_on  = [aws_iam_policy.lambda_dynamodb]
 
   managed_policy_arns = [aws_iam_policy.lambda_dynamodb.arn]
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = "sts:AssumeRole"
         Effect = "Allow"
-        Sid    = ""
         Principal = {
           Service = "lambda.amazonaws.com"
         }
       },
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "apigateway.amazonaws.com"  # Permitir que o API Gateway assuma
+        }
+      }
     ]
   })
 
@@ -69,3 +73,5 @@ resource "aws_iam_role" "test_role" {
     env = "dev"
   }
 }
+
+
