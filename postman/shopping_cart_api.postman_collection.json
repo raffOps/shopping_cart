@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n  {\n    \"buyer_id\": 1,\n    \"product_id\": 101,\n    \"number_of_installments\": 3,\n    \"total_amount\": 1500,\n    \"purchase_date\": \"2024-09-23T12:00:00.123456789Z\"\n  },\n  {\n    \"buyer_id\": 2,\n    \"product_id\": 102,\n    \"number_of_installments\": 5,\n    \"total_amount\": 2500,\n    \"purchase_date\": \"2024-09-23T13:00:00.987654321Z\"\n  },\n  {\n    \"buyer_id\": 3,\n    \"product_id\": 103,\n    \"number_of_installments\": 1,\n    \"total_amount\": 500,\n    \"purchase_date\": \"2024-09-23T14:00:00.111111111Z\"\n  }\n]\n",
+					"raw": "{\n    \"requestId\": \"f60d9aa2-e65a-4257-a71c-ad28ba73930d\",\n    \"timestamp\": 1727183085123,\n    \"records\": [\n        {\n            \"data\": \"eyJidXllcl9pZCI6MTA5NSwicHJvZHVjdF9pZCI6MiwibnVtYmVyX29mX2luc3RhbGxtZW50cyI6MiwidG90YWxfYW1vdW50IjoxMDAsInB1cmNoYXNlX2RhdGUiOiIyMDI0LTA5LTI0VDA5OjU5OjQ1LjYxODMwNyJ9\"\n        },\n        {\n            \"data\": \"eyJidXllcl9pZCI6MTA5NiwicHJvZHVjdF9pZCI6MiwibnVtYmVyX29mX2luc3RhbGxtZW50cyI6MiwidG90YWxfYW1vdW50IjoxMDAsInB1cmNoYXNlX2RhdGUiOiIyMDI0LTA5LTI0VDA5OjU5OjQ1LjgyMzAyMCJ9\"\n        },\n        {\n            \"data\": \"eyJidXllcl9pZCI6MTA5NywicHJvZHVjdF9pZCI6MiwibnVtYmVyX29mX2luc3RhbGxtZW50cyI6MiwidG90YWxfYW1vdW50IjoxMDAsInB1cmNoYXNlX2RhdGUiOiIyMDI0LTA5LTI0VDA5OjU5OjQ2LjAyNzIwNiJ9\"\n        },\n        {\n            \"data\": \"eyJidXllcl9pZCI6MTA5OCwicHJvZHVjdF9pZCI6MiwibnVtYmVyX29mX2luc3RhbGxtZW50cyI6MiwidG90YWxfYW1vdW50IjoxMDAsInB1cmNoYXNlX2RhdGUiOiIyMDI0LTA5LTI0VDA5OjU5OjQ2LjIzMjA2NSJ9\"\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"

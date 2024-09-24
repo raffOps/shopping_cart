@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pythonproject"
+name = "shopping_cart"
 version = "0.1.0"
 description = ""
 authors = ["Rafael <30165666+raffOps@users.noreply.github.com>"]

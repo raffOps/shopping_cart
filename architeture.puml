@@ -1,0 +1,20 @@
+@startuml
+cloud "Producer" as Producers
+queue "SNS Topic" as SNS
+queue "Kinesis Firehose" as Kinesis
+cloud "API Gateway/Lambda" as Lambda
+database "DynamoDB" as Dynamo
+storage "S3" as S3
+
+Producers --> SNS
+SNS --> Kinesis
+Kinesis --> Lambda: Success
+Lambda --> Dynamo
+Kinesis --> S3: Failure
+
+note right of SNS: Accumulates data until it reaches a memory or time limit
+note right of Kinesis: Batch processing
+note bottom of Dynamo: Batch processed successfully
+note bottom of S3: Batch processed with failure
+
+@enduml

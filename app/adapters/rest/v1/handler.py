@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from mangum import Mangum
 
-from domain.models.shopping_cart import Shopping_Cart
+from adapters.rest.v1.dto import FirehoseCreateShoppingCart
 from repositories.dynamodb import DynamoDBRepository
 
 logger = logging.getLogger("v1/shopping_cart/rest")
@@ -14,19 +14,35 @@ repo = DynamoDBRepository(dynamodb_resource)
 
 app = FastAPI()
 
+
 @app.get("/")
 def root():
     return {"message": "Hello World!"}
 
 
 @app.post("/v1/shopping_cart/")
-def create(carts: list[Shopping_Cart]) -> JSONResponse:
-    logger.info(carts)
+def create(firehose_carts: FirehoseCreateShoppingCart) -> JSONResponse:
     try:
+        carts = firehose_carts.to_shopping_carts()
         repo.write_cart(carts)
-        return JSONResponse(status_code=201, content={"message": "Cart created"})
+        return JSONResponse(
+            status_code=200,
+            content={
+                "requestId": firehose_carts.requestId,
+                "timestamp": firehose_carts.timestamp
+            },
+            headers={"Content-Type": "application/json"}
+        )
     except Exception as e:
-        return JSONResponse(status_code=200, content={"message": f"Internal Server Error: {e}"})
+        return JSONResponse(
+            status_code=500,
+            content={
+                "errorMessage": f"Internal Server Error: {e}",
+                "requestId": firehose_carts.requestId,
+                "timestamp": firehose_carts.timestamp,
+            },
+            headers={"Content-Type": "application/json"}
+        )
 
 
 handler = Mangum(app)

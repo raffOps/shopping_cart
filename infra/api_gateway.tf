@@ -41,6 +41,41 @@ resource "aws_api_gateway_model" "create_shopping_cart" {
   )
 }
 
+resource "aws_api_gateway_model" "firehose_integration" {
+  rest_api_id  = aws_api_gateway_rest_api.api.id
+  content_type = "application/json"
+  name         = "firehoseIntegrationCreateShoppingCart"
+
+  schema = jsonencode(
+
+    {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "string"
+              }
+            },
+            "required": ["data"]
+          }
+        }
+      },
+      "required": ["requestId", "timestamp", "records"]
+    }
+  )
+}
+
+
 resource "aws_api_gateway_resource" "v1" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   path_part   = "v1"
@@ -60,7 +95,7 @@ resource "aws_api_gateway_method" "post" {
   http_method   = "POST"
   authorization = "NONE"
   request_models = {
-    "application/json" = aws_api_gateway_model.create_shopping_cart.name
+    "application/json" = aws_api_gateway_model.firehose_integration.name
   }
 }
 
@@ -75,7 +110,7 @@ resource "aws_api_gateway_integration" "integration" {
 
 resource "aws_api_gateway_deployment" "dev" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-
+  depends_on = [aws_api_gateway_integration.integration]
   triggers = {
     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.api.body))
   }
