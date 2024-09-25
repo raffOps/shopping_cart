@@ -41,7 +41,8 @@ def create(firehose_carts: FirehoseCreateShoppingCart) -> JSONResponse:
                 "errorMessage": e,
                 "requestId": firehose_carts.requestId,
                 "timestamp": firehose_carts.timestamp,
-            }
+            },
+            headers={"Content-Type": "application/json"}
         )
     except Exception as e:
         return JSONResponse(
