@@ -199,3 +199,5 @@ cython_debug/
 
 *.lock.hcl
 /poetry.lock
+/.scannerwork/.sonar_lock
+/.scannerwork/report-task.txt

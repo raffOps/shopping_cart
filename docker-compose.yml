@@ -1,0 +1,20 @@
+services:
+  sonar:
+    image: sonarqube:latest
+    #    env_file:
+    #      - .env
+    container_name: sonar
+    ports:
+      - "9100:9000"
+
+    volumes:
+      - sonar-data:/opt/sonarqube/data
+      - sonar-extensions:/opt/sonarqube/extensions
+      - sonar-logs:/opt/sonarqube/logs
+      - sonar-conf:/opt/sonarqube/conf
+
+volumes:
+  sonar-data:
+  sonar-extensions:
+  sonar-logs:
+  sonar-conf:

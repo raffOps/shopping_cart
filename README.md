@@ -6,12 +6,12 @@ NoSQL database. The flow begins with an API call, which should be handled throug
 mechanism, leading to successful data persistence. Since this flow is critical, any data loss
 directly translates to lost revenue.
 The suggested payload for the message includes the following fields:
- - buyer_id: int
- - product_id: int
- - number_of_installments: int
- - total_amount: double
- - purchase_date: date
 
+- buyer_id: int
+- product_id: int
+- number_of_installments: int
+- total_amount: double
+- purchase_date: date
 
 # Architectural proposal
 
@@ -30,9 +30,11 @@ The suggested payload for the message includes the following fields:
    - `terraform apply`
 
 # Publishing
+
 Run [producer.py](./producer.py). This script with generate fake data.
 
 # Consuming
+
 You can see the messages on dynamodb using web console.
 
 ## Improvement points

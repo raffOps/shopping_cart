@@ -5,22 +5,22 @@ from boto3.resources.factory import ServiceResource
 from botocore.exceptions import ClientError
 
 from domain.errors import InternalServerError
-from domain.models.shopping_cart import Shopping_Cart
-from domain.ports import Shopping_Cart_Writer_Reader_Repository_Port, Shopping_Cart_Reader_Repository_Port, \
-    Shopping_Cart_Writer_Repository_Port
+from domain.models.shopping_cart import ShoppingCart
+from domain.ports import ShoppingCartWriterReaderRepositoryPort, ShoppingCartReaderRepositoryPort, \
+    ShoppingCartWriterRepositoryPort
 
 
-class DynamoDBRepository(Shopping_Cart_Writer_Reader_Repository_Port, Shopping_Cart_Reader_Repository_Port,
-                         Shopping_Cart_Writer_Repository_Port, ABC):
+class DynamoDBRepository(ShoppingCartWriterReaderRepositoryPort, ShoppingCartReaderRepositoryPort,
+                         ShoppingCartWriterRepositoryPort, ABC):
 
     def __init__(self, conn: ServiceResource):
         super().__init__()
         self.conn: Any = conn
 
-    def read_cart_from_buyer_id(self, buyer_id: int) -> Shopping_Cart:
-        pass
+    def read_cart_from_buyer_id(self, buyer_id: int) -> ShoppingCart:
+        raise NotImplementedError
 
-    def write_cart(self, carts: list[Shopping_Cart]) -> None:
+    def write_cart(self, carts: list[ShoppingCart]) -> None:
         table = self.conn.Table("ShoppingCart")
         try:
             with table.batch_writer() as writer:

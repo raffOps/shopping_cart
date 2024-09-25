@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from mangum import Mangum
 
 from adapters.rest.v1.dto import FirehoseCreateShoppingCart
+from domain.errors import BadRequestError
 from repositories.dynamodb import DynamoDBRepository
 
 logger = logging.getLogger("v1/shopping_cart/rest")
@@ -33,11 +34,20 @@ def create(firehose_carts: FirehoseCreateShoppingCart) -> JSONResponse:
             },
             headers={"Content-Type": "application/json"}
         )
+    except BadRequestError as e:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "errorMessage": e,
+                "requestId": firehose_carts.requestId,
+                "timestamp": firehose_carts.timestamp,
+            }
+        )
     except Exception as e:
         return JSONResponse(
             status_code=500,
             content={
-                "errorMessage": f"Internal Server Error: {e}",
+                "errorMessage": e,
                 "requestId": firehose_carts.requestId,
                 "timestamp": firehose_carts.timestamp,
             },

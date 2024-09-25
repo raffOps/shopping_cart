@@ -1,39 +1,39 @@
 from abc import ABC, abstractmethod
 
-from domain.models.shopping_cart import Shopping_Cart
+from domain.models.shopping_cart import ShoppingCart
 
 
-class Shopping_Cart_Service_Port(ABC):
+class ShoppingCartServicePort(ABC):
 
     @abstractmethod
-    def create_cart(self, cart: Shopping_Cart) -> Shopping_Cart:
+    def create_cart(self, cart: ShoppingCart) -> ShoppingCart:
         pass
 
 
-class Shopping_Cart_Topic_Repository_Port(ABC):
+class ShoppingCartTopicRepositoryPort(ABC):
 
     @abstractmethod
-    def publish_cart(self, cart: Shopping_Cart) -> Shopping_Cart:
+    def publish_cart(self, cart: ShoppingCart) -> ShoppingCart:
         pass
 
 
-class Shopping_Cart_Writer_Reader_Repository_Port(ABC):
+class ShoppingCartWriterReaderRepositoryPort(ABC):
     @abstractmethod
-    def read_cart_from_buyer_id(self, buyer_id: int) -> Shopping_Cart:
+    def read_cart_from_buyer_id(self, buyer_id: int) -> ShoppingCart:
         pass
 
     @abstractmethod
-    def write_cart(self, carts: list[Shopping_Cart]) -> None:
+    def write_cart(self, carts: list[ShoppingCart]) -> None:
         pass
 
 
-class Shopping_Cart_Writer_Repository_Port(ABC):
+class ShoppingCartWriterRepositoryPort(ABC):
     @abstractmethod
-    def write_cart(self, carts: list[Shopping_Cart]) -> None:
+    def write_cart(self, carts: list[ShoppingCart]) -> None:
         pass
 
 
-class Shopping_Cart_Reader_Repository_Port(ABC):
+class ShoppingCartReaderRepositoryPort(ABC):
     @abstractmethod
-    def read_cart_from_buyer_id(self, buyer_id: int) -> Shopping_Cart:
+    def read_cart_from_buyer_id(self, buyer_id: int) -> ShoppingCart:
         pass

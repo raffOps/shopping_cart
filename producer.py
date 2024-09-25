@@ -1,16 +1,19 @@
-import json
 import logging
+import os
 import random
-from typing import Any
 from datetime import datetime
+from typing import Any
 
 import boto3
 from botocore.exceptions import ClientError
 
-from app.domain.models.shopping_cart import Shopping_Cart
+from app.domain.models.shopping_cart import ShoppingCart
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+
+SHOPPING_CART_TOPIC_ARN = os.getenv("SHOPPING_CART_TOPIC_ARN")
+
 
 def get_topic(sns_resource, topic_arn: str) -> Any:
     topics = sns_resource.topics.all()
@@ -19,10 +22,11 @@ def get_topic(sns_resource, topic_arn: str) -> Any:
             return topic
     return None
 
+
 def publish(topic: Any) -> None:
     buyer_id = random.randint(1, 1000)
     while True:
-        cart = Shopping_Cart(
+        cart = ShoppingCart(
             buyer_id=buyer_id,
             product_id=2,
             number_of_installments=2,
@@ -41,7 +45,7 @@ def publish(topic: Any) -> None:
 
 def main() -> None:
     sns_resource = boto3.resource("sns")
-    topic = get_topic(sns_resource, "arn:aws:sns:us-east-1:010526247757:shopping_cart")
+    topic = get_topic(sns_resource, SHOPPING_CART_TOPIC_ARN)
     publish(topic)
 
 

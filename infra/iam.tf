@@ -4,12 +4,12 @@ resource "aws_iam_policy" "lambda_dynamodb" {
   description = "service for lambda function work with dynamodb table"
 
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Sid": "DynamoDB",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "DynamoDB",
+        "Effect" : "Allow",
+        "Action" : [
           "dynamodb:PutItem",
           "dynamodb:DeleteItem",
           "dynamodb:GetItem",
@@ -18,19 +18,19 @@ resource "aws_iam_policy" "lambda_dynamodb" {
           "dynamodb:UpdateItem",
           "dynamodb:BatchWriteItem"
         ],
-        "Resource": [
+        "Resource" : [
           "*"
         ]
       },
       {
-        "Sid": "Logs",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "Logs",
+        "Effect" : "Allow",
+        "Action" : [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ],
-        "Resource": [
+        "Resource" : [
           "*"
         ]
       }
@@ -63,7 +63,7 @@ resource "aws_iam_role" "iam_for_lambda" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = "apigateway.amazonaws.com"  # Permitir que o API Gateway assuma
+          Service = "apigateway.amazonaws.com" # Permitir que o API Gateway assuma
         }
       }
     ]
@@ -81,20 +81,20 @@ resource "aws_iam_policy" "sns_kinesis" {
   description = "IAM for sns send messages to kinesis"
 
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Action": [
+        "Action" : [
           "firehose:DescribeDeliveryStream",
           "firehose:ListDeliveryStreams",
           "firehose:ListTagsForDeliveryStream",
           "firehose:PutRecord",
           "firehose:PutRecordBatch"
         ],
-        "Resource": [
+        "Resource" : [
           "*",
         ],
-        "Effect": "Allow"
+        "Effect" : "Allow"
       }
     ]
   })
@@ -112,14 +112,14 @@ resource "aws_iam_role" "sns_kinesis" {
   managed_policy_arns = [aws_iam_policy.sns_kinesis.arn]
 
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "sns.amazonaws.com"
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "sns.amazonaws.com"
         },
-        "Action": "sts:AssumeRole"
+        "Action" : "sts:AssumeRole"
       }
     ]
   })
@@ -135,43 +135,43 @@ resource "aws_iam_policy" "kinesis_lambda" {
   description = "IAM for sns send messages to kinesis"
 
   policy = jsonencode({
-    "Statement": [
+    "Statement" : [
       {
-        "Action": [
+        "Action" : [
           "s3:*"
         ],
-        "Effect": "Allow",
-        "Resource": [
+        "Effect" : "Allow",
+        "Resource" : [
           aws_s3_bucket.firehose-dead-letter-queue.arn,
           "${aws_s3_bucket.firehose-dead-letter-queue.arn}/*",
         ]
-        "Sid": "s3Permissions"
+        "Sid" : "s3Permissions"
       },
       {
-        "Action": [
+        "Action" : [
           "firehose:*",
           "logs:*"
         ],
-        "Effect": "Allow",
-        "Resource": [
+        "Effect" : "Allow",
+        "Resource" : [
           "*"
         ],
-        "Sid": "cloudWatchLog"
+        "Sid" : "cloudWatchLog"
       },
       {
-        "Action": [
+        "Action" : [
           "execute-api:*",
           "lambda:*",
           "lambda:*"
         ],
-        "Effect": "Allow",
-        "Resource": [
+        "Effect" : "Allow",
+        "Resource" : [
           "*"
         ],
-        "Sid": "lambdaProcessing"
+        "Sid" : "lambdaProcessing"
       }
     ],
-    "Version": "2012-10-17"
+    "Version" : "2012-10-17"
   })
 
   tags = {
@@ -182,74 +182,74 @@ resource "aws_iam_policy" "kinesis_lambda" {
 resource "aws_iam_policy" "kinesis_lambda2" {
   name = "kinesis_lambda2"
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Sid": "GetSecretValue",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "GetSecretValue",
+        "Effect" : "Allow",
+        "Action" : [
           "secretsmanager:GetSecretValue"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "DecryptSecretWithKMSKey",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "DecryptSecretWithKMSKey",
+        "Effect" : "Allow",
+        "Action" : [
           "kms:Decrypt"
         ],
-        "Resource": "*",
-        "Condition": {
-          "StringEquals": {
-            "kms:ViaService": [
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "kms:ViaService" : [
               "secretsmanager.us-east-1.amazonaws.com"
             ]
           }
         }
       },
       {
-        "Sid": "DataFormatConversion",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "DataFormatConversion",
+        "Effect" : "Allow",
+        "Action" : [
           "glue:GetTable",
           "glue:GetTableVersion",
           "glue:GetTableVersions"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "mskSourcePermissions",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "mskSourcePermissions",
+        "Effect" : "Allow",
+        "Action" : [
           "kafka:GetBootstrapBrokers",
           "kafka:DescribeCluster",
           "kafka:DescribeClusterV2",
           "kafka-cluster:Connect"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "toReadMSKData",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "toReadMSKData",
+        "Effect" : "Allow",
+        "Action" : [
           "kafka-cluster:DescribeTopic",
           "kafka-cluster:DescribeTopicDynamicConfiguration",
           "kafka-cluster:ReadData"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "toDescribeMSKGroup",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "toDescribeMSKGroup",
+        "Effect" : "Allow",
+        "Action" : [
           "kafka-cluster:DescribeGroup"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "s3Permissions",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "s3Permissions",
+        "Effect" : "Allow",
+        "Action" : [
           "s3:AbortMultipartUpload",
           "s3:GetBucketLocation",
           "s3:GetObject",
@@ -257,73 +257,73 @@ resource "aws_iam_policy" "kinesis_lambda2" {
           "s3:ListBucketMultipartUploads",
           "s3:PutObject"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "lambdaProcessing",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "lambdaProcessing",
+        "Effect" : "Allow",
+        "Action" : [
           "lambda:InvokeFunction",
           "lambda:GetFunctionConfiguration"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "s3Encryption",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "s3Encryption",
+        "Effect" : "Allow",
+        "Action" : [
           "kms:GenerateDataKey",
           "kms:Decrypt"
         ],
-        "Resource": "*",
-        "Condition": {
-          "StringEquals": {
-            "kms:ViaService": "s3.us-east-1.amazonaws.com"
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "kms:ViaService" : "s3.us-east-1.amazonaws.com"
           },
-          "StringLike": {
-            "kms:EncryptionContext:aws:s3:arn": [
+          "StringLike" : {
+            "kms:EncryptionContext:aws:s3:arn" : [
               "*"
             ]
           }
         }
       },
       {
-        "Sid": "cloudWatchLog",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "cloudWatchLog",
+        "Effect" : "Allow",
+        "Action" : [
           "logs:PutLogEvents"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "KDSSourcePermissions",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "KDSSourcePermissions",
+        "Effect" : "Allow",
+        "Action" : [
           "kinesis:DescribeStream",
           "kinesis:GetShardIterator",
           "kinesis:GetRecords",
           "kinesis:ListShards"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Sid": "KDSEncryption",
-        "Effect": "Allow",
-        "Action": [
+        "Sid" : "KDSEncryption",
+        "Effect" : "Allow",
+        "Action" : [
           "kms:Decrypt"
         ],
-        "Resource": "*",
-        "Condition": {
-          "StringEquals": {
-            "kms:ViaService": "kinesis.us-east-1.amazonaws.com"
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "kms:ViaService" : "kinesis.us-east-1.amazonaws.com"
           },
-          "StringLike": {
-            "kms:EncryptionContext:aws:kinesis:arn": "*"
+          "StringLike" : {
+            "kms:EncryptionContext:aws:kinesis:arn" : "*"
           }
         }
       }
     ]
-  }
+    }
   )
 }
 
@@ -334,15 +334,15 @@ resource "aws_iam_role" "kinesis_lambda" {
   managed_policy_arns = [aws_iam_policy.kinesis_lambda.arn, aws_iam_policy.kinesis_lambda2.arn]
 
   assume_role_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Sid": "firehoseAssume",
-        "Effect": "Allow",
-        "Principal": {
-          "Service": "firehose.amazonaws.com"
+        "Sid" : "firehoseAssume",
+        "Effect" : "Allow",
+        "Principal" : {
+          "Service" : "firehose.amazonaws.com"
         },
-        "Action": "sts:AssumeRole",
+        "Action" : "sts:AssumeRole",
       }
     ]
   })

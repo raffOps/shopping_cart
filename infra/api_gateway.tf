@@ -1,5 +1,5 @@
 resource "aws_api_gateway_rest_api" "api" {
-  name        = "shopping_cart"
+  name = "shopping_cart"
 }
 
 resource "aws_api_gateway_model" "create_shopping_cart" {
@@ -8,28 +8,28 @@ resource "aws_api_gateway_model" "create_shopping_cart" {
   content_type = "application/json"
 
   schema = jsonencode({
-    "type": "array",
-    "items": {
-      "type": "object",
-      "properties": {
-        "buyer_id": {
-          "type": "integer"
+    "type" : "array",
+    "items" : {
+      "type" : "object",
+      "properties" : {
+        "buyer_id" : {
+          "type" : "integer"
         },
-        "product_id": {
-          "type": "integer"
+        "product_id" : {
+          "type" : "integer"
         },
-        "number_of_installments": {
-          "type": "integer"
+        "number_of_installments" : {
+          "type" : "integer"
         },
-        "total_amount": {
-          "type": "integer"
+        "total_amount" : {
+          "type" : "integer"
         },
-        "purchase_date": {
-          "type": "string",
-          "format": "date-time"
+        "purchase_date" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       },
-      "required": [
+      "required" : [
         "buyer_id",
         "product_id",
         "number_of_installments",
@@ -37,7 +37,7 @@ resource "aws_api_gateway_model" "create_shopping_cart" {
         "purchase_date"
       ]
     }
-  }
+    }
   )
 }
 
@@ -49,28 +49,28 @@ resource "aws_api_gateway_model" "firehose_integration" {
   schema = jsonencode(
 
     {
-      "type": "object",
-      "properties": {
-        "requestId": {
-          "type": "string"
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string"
         },
-        "timestamp": {
-          "type": "integer"
+        "timestamp" : {
+          "type" : "integer"
         },
-        "records": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "string"
+        "records" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : {
+              "data" : {
+                "type" : "string"
               }
             },
-            "required": ["data"]
+            "required" : ["data"]
           }
         }
       },
-      "required": ["requestId", "timestamp", "records"]
+      "required" : ["requestId", "timestamp", "records"]
     }
   )
 }
@@ -110,7 +110,7 @@ resource "aws_api_gateway_integration" "integration" {
 
 resource "aws_api_gateway_deployment" "dev" {
   rest_api_id = aws_api_gateway_rest_api.api.id
-  depends_on = [aws_api_gateway_integration.integration]
+  depends_on  = [aws_api_gateway_integration.integration]
   triggers = {
     redeployment = sha1(jsonencode(aws_api_gateway_rest_api.api.body))
   }
